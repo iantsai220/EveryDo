@@ -8,10 +8,13 @@
 
 #import "MasterViewController.h"
 #import "DetailViewController.h"
+#import "Todo.h"
+#import "ToDoCell.h"
 
 @interface MasterViewController ()
 
 @property NSMutableArray *objects;
+
 @end
 
 @implementation MasterViewController
@@ -27,6 +30,35 @@
 
     UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)];
     self.navigationItem.rightBarButtonItem = addButton;
+    
+    
+    self.objects = [NSMutableArray array];
+    
+    Todo *todo = [[Todo alloc] init];
+    todo.title = @"Vaccum Floor";
+    todo.detail = @"take the vaccum and vaccum the damn floor";
+    todo.priorityNumber = 1;
+    todo.isCompletedIndicator = NO;
+    [self.objects addObject:todo];
+    
+    todo = [[Todo alloc] init];
+    todo.title = @"Swifer Floor";
+    todo.detail = @"take the swifer and swifer the damn floor";
+    todo.priorityNumber = 1;
+    todo.isCompletedIndicator = NO;
+    [self.objects addObject:todo];
+    
+    todo = [[Todo alloc] init];
+    todo.title = @"Mop Floor";
+    todo.detail = @"take the mop and mop the damn floor";
+    todo.priorityNumber = 1;
+    todo.isCompletedIndicator = NO;
+    [self.objects addObject:todo];
+    
+
+
+
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -64,10 +96,21 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
+    ToDoCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
 
-    NSDate *object = self.objects[indexPath.row];
-    cell.textLabel.text = [object description];
+//    NSDate *object = self.objects[indexPath.row];
+//    cell.textLabel.text = [object description];
+    
+    Todo *todo = (self.objects)[indexPath.row];
+    
+    cell.titleLabel.text = todo.title;
+    cell.detailLabel.text = todo.detail;
+    cell.priorityLabel.text = [NSString stringWithFormat:@"%d",todo.priorityNumber];
+    
+    
+    
+    
+    
     return cell;
 }
 
