@@ -10,8 +10,9 @@
 #import "DetailViewController.h"
 #import "Todo.h"
 #import "ToDoCell.h"
+#import "AddTodoViewController.h"
 
-@interface MasterViewController ()
+@interface MasterViewController () <AddToDoDelegate>
 
 @property NSMutableArray *objects;
 
@@ -27,9 +28,6 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     self.navigationItem.leftBarButtonItem = self.editButtonItem;
-
-    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)];
-    self.navigationItem.rightBarButtonItem = addButton;
     
     
     self.objects = [NSMutableArray array];
@@ -44,20 +42,17 @@
     todo = [[Todo alloc] init];
     todo.title = @"Swifer Floor";
     todo.detail = @"take the swifer and swifer the damn floor";
-    todo.priorityNumber = 1;
+    todo.priorityNumber = 2;
     todo.isCompletedIndicator = NO;
     [self.objects addObject:todo];
     
     todo = [[Todo alloc] init];
     todo.title = @"Mop Floor";
     todo.detail = @"take the mop and mop the damn floor";
-    todo.priorityNumber = 1;
+    todo.priorityNumber = 3;
     todo.isCompletedIndicator = NO;
     [self.objects addObject:todo];
     
-
-
-
     
 }
 
@@ -66,22 +61,28 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)insertNewObject:(id)sender {
-    if (!self.objects) {
-        self.objects = [[NSMutableArray alloc] init];
-    }
-    [self.objects insertObject:[NSDate date] atIndex:0];
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
-    [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-}
 
 #pragma mark - Segues
+
+-(void)addTodo:(Todo *)todo{
+    
+    [self.objects addObject:todo];
+    [self.tableView reloadData];
+}
+
+
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([[segue identifier] isEqualToString:@"showDetail"]) {
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-        NSDate *object = self.objects[indexPath.row];
-        [[segue destinationViewController] setDetailItem:object];
+        Todo *todo = (self.objects)[indexPath.row];
+        [[segue destinationViewController] setTodoItem:todo];
+    }
+    else if ([[segue identifier] isEqualToString:@"AddNewToDo"]){
+        //Todo *todo = [[Todo alloc] init];
+        AddTodoViewController *addTodoVC = segue.destinationViewController;
+        
+        addTodoVC.delegate = self;
     }
 }
 

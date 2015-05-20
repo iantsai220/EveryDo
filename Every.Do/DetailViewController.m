@@ -10,15 +10,21 @@
 
 @interface DetailViewController ()
 
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+
+@property (weak, nonatomic) IBOutlet UILabel *detailLabel;
+
+@property (weak, nonatomic) IBOutlet UILabel *priorityLabel;
+
 @end
 
 @implementation DetailViewController
 
 #pragma mark - Managing the detail item
 
-- (void)setDetailItem:(id)newDetailItem {
-    if (_detailItem != newDetailItem) {
-        _detailItem = newDetailItem;
+- (void)setTodoItem:(Todo*)newDetailItem {
+    if (_todoItem != newDetailItem) {
+        _todoItem = newDetailItem;
             
         // Update the view.
         [self configureView];
@@ -27,8 +33,12 @@
 
 - (void)configureView {
     // Update the user interface for the detail item.
-    if (self.detailItem) {
-        self.detailDescriptionLabel.text = [self.detailItem description];
+    
+
+    if (self.todoItem) {
+        self.titleLabel.text = [self.todoItem title];
+        self.detailLabel.text = [self.todoItem detail];
+        self.priorityLabel.text = [NSString stringWithFormat:@"%d",[self.todoItem priorityNumber]];
     }
 }
 
