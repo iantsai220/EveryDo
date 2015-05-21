@@ -97,18 +97,37 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
     ToDoCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
 
 //    NSDate *object = self.objects[indexPath.row];
 //    cell.textLabel.text = [object description];
     
-    Todo *todo = (self.objects)[indexPath.row];
     
+    Todo *todo = (self.objects)[indexPath.row];
     cell.titleLabel.text = todo.title;
     cell.detailLabel.text = todo.detail;
     cell.priorityLabel.text = [NSString stringWithFormat:@"%d",todo.priorityNumber];
     
+    UISwipeGestureRecognizer *swipeGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(crossout:)];
+    swipeGesture.direction = UISwipeGestureRecognizerDirectionRight;
+    [self.view addGestureRecognizer:swipeGesture];
     
+    if (todo.isCompletedIndicator) {
+
+        NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:todo.title];
+        [string addAttribute:NSStrikethroughStyleAttributeName value:@2 range:NSMakeRange(0, [string length])];
+        
+        cell.titleLabel.attributedText = string;
+    }
+    else {
+        cell.titleLabel.text = todo.title;
+    }
+    
+    
+    
+    
+  
     
     
     
@@ -128,5 +147,45 @@
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
     }
 }
+
+-(void)crossout:(UISwipeGestureRecognizer *)sender {
+    
+    CGPoint pt = [sender locationInView:self.tableView];
+    NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:pt];
+    
+    NSIndexPath *lastPath = [NSIndexPath indexPathForRow:self.objects.count-1 inSection:0];
+    
+    Todo *todo = [self.objects objectAtIndex:indexPath.row];
+    
+    todo.isCompletedIndicator = YES;
+    
+    [self.objects removeObject:todo];
+    [self.objects addObject:todo];
+    [self.tableView moveRowAtIndexPath:indexPath toIndexPath:lastPath];
+
+    
+    [self.tableView reloadRowsAtIndexPaths: @[lastPath] withRowAnimation:UITableViewRowAnimationRight];
+    
+//
+//        NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:todo.title attributes:@{NSStrikethroughStyleAttributeName:[NSNumber numberWithInteger:NSUnderlineStyleNone]}];
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 @end

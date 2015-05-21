@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Todo.h"
 
 @interface ToDoCell : UITableViewCell
 
@@ -15,6 +16,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *detailLabel;
 
 @property (weak, nonatomic) IBOutlet UILabel *priorityLabel;
+
+@property (nonatomic, strong) Todo *todo;
 
 
 
